@@ -11,7 +11,8 @@ public class OffMeshLinkAction : MonoBehaviour
         Climb,
         JumpWithStyle,
         JumpWithAniamtion,
-        ClimbDown
+        ClimbDown,
+        Cover
     }
     public Action action;
     public bool applyRotationBlend = true;

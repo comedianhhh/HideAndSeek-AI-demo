@@ -14,9 +14,6 @@ public class YBot_BaseState : FSMBaseState<YBot_FSM>
     {
         base.Init(_owner, _fsm);
 
-        controller = owner.GetComponent<YBot_Controller>();
-        Debug.Assert(controller != null, $"{owner.name} requires a YBot_Controller Component");
-
         agent = owner.GetComponent<NavMeshAgent>();
         Debug.Assert(agent != null, $"{owner.name} requires a NavMeshAgent Component");
 
