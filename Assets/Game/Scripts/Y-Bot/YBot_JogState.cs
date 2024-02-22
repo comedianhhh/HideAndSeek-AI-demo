@@ -48,35 +48,8 @@ public class YBot_JogState : YBot_BaseState
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (agent.isOnOffMeshLink == true)
-        {
-            OffMeshLinkAction action = agent.currentOffMeshLinkData.offMeshLink.GetComponent<OffMeshLinkAction>();
-            Debug.Assert(action != null, $"{agent.currentOffMeshLinkData.offMeshLink.name} requires an OffMeshLinkAction to complete OffMeshLink movement");
 
-            if (action.applyRotationBlend)
-            {
-                Vector3 direction = (agent.currentOffMeshLinkData.endPos - agent.currentOffMeshLinkData.startPos).normalized;
-                direction.y = 0.0f;
-                float angle = Vector3.Angle(transform.forward, direction);
-                if (Mathf.Abs(angle) > OffMeshAngleThreshold)
-                {
-                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * angularDampeningTime);
-                    return;
-                }
-
-                transform.LookAt(transform.position + direction);
-            }
-
-            switch (action.action)
-            {
-                case OffMeshLinkAction.Action.Cover:
-                    fsm.ChangeState(fsm.CoverStateName);
-                    YBotAnimator.SetTrigger("Cover");
-                    break;
-
-            }
-        }
-        else if (agent.desiredVelocity != Vector3.zero)
+        if (agent.desiredVelocity != Vector3.zero)
         {
             float speed = Vector3.Project(agent.desiredVelocity, transform.forward).magnitude * agent.speed;
             YBotAnimator.SetFloat(SpeedParameter, speed);
@@ -95,8 +68,16 @@ public class YBot_JogState : YBot_BaseState
         }
         else
         {
-           // YBotAnimator.SetFloat(SpeedParameter, 0.0f);
-            //fsm.ChangeState(fsm.IdleStateName);
+            CheckIfArrivedAtHidingSpot();
+        }
+    }
+    private void CheckIfArrivedAtHidingSpot()
+    {
+        // Check if we've reached the hiding spot
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            // Assume you have a method in your FSM to change to the Hide state
+            fsm.ChangeState(fsm.CoverStateName);
         }
     }
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
