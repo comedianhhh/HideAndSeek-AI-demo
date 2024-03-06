@@ -16,7 +16,7 @@ public class YBot_CoverState : YBot_BaseState
 
     public bool HasBeenCaught=false;
 
-    public float distanceToWall=0.3f;
+    public float distanceToWall=0.2f;
 
     private AnimationListener animationListener;
     private readonly int ANIM_StandToCover = Animator.StringToHash("StandToCover");
@@ -87,10 +87,11 @@ public class YBot_CoverState : YBot_BaseState
         if (FindNearestCoverObject(out hitInfo))
         {
             // Align the character to be a certain distance from the wall, facing away from it
-            transform.position = hitInfo.point + hitInfo.normal * distanceToWall; // 'distanceToWall' is the desired distance from the wall
+            agent.transform.position = hitInfo.point + hitInfo.normal * distanceToWall; // 'distanceToWall' is the desired distance from the wall
 
             // Make the character face away from the wall, which is the opposite direction of the wall's normal
-            transform.rotation = Quaternion.LookRotation(-hitInfo.normal);
+            agent.transform.rotation = Quaternion.LookRotation(-hitInfo.normal);
+        
         }
     }
 
@@ -146,4 +147,5 @@ public class YBot_CoverState : YBot_BaseState
 
         }
     }
+
 }
