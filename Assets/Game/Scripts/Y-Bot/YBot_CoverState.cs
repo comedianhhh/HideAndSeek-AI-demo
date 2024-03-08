@@ -35,16 +35,15 @@ public class YBot_CoverState : YBot_BaseState
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+        AlignWithCover();
 
         animationListener.AddAnimationCompletedListener(ANIM_StandToCover, OnAnimationCompleted);
         animationListener.AddAnimationCompletedListener(ANIM_CoverToStand, OnAnimationCompleted);
-
         GameManager.Instance.OnFound += OnFoundHandler;
 
         coverStates = CoverStates.StandToCover;
         HasBeenCaught = false;
-        AlignWithCover();
-
+        
         YBotAnimator.SetTrigger("Cover");
 
     }
@@ -74,6 +73,7 @@ public class YBot_CoverState : YBot_BaseState
         if (shortHashCode == ANIM_StandToCover)
         {
             coverStates = CoverStates.Cover;
+            
         }
         else if (shortHashCode == ANIM_CoverToStand)
         {
@@ -86,12 +86,15 @@ public class YBot_CoverState : YBot_BaseState
         RaycastHit hitInfo;
         if (FindNearestCoverObject(out hitInfo))
         {
-            // Align the character to be a certain distance from the wall, facing away from it
-            agent.transform.position = hitInfo.point + hitInfo.normal * distanceToWall; // 'distanceToWall' is the desired distance from the wall
+            // Position the player a certain distance from the wall
+            transform.position = hitInfo.point + hitInfo.normal * distanceToWall;
 
-            // Make the character face away from the wall, which is the opposite direction of the wall's normal
-            agent.transform.rotation = Quaternion.LookRotation(-hitInfo.normal);
-        
+            // Calculate forward direction for the player
+            Vector3 forwardDirection = hitInfo.normal;
+
+            // Set the player's rotation to face away from the wall
+            Quaternion targetRotation = Quaternion.LookRotation(forwardDirection);
+            transform.rotation= targetRotation;
         }
     }
 
@@ -148,4 +151,5 @@ public class YBot_CoverState : YBot_BaseState
         }
     }
 
+    
 }
