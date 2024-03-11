@@ -9,7 +9,7 @@ public class YBot_BaseState : FSMBaseState<YBot_FSM>
     protected NavMeshAgent agent;
     protected Transform transform;
     protected Animator YBotAnimator;
-
+    protected YBot_Controller Ybot;
     public override void Init(GameObject _owner, FSM _fsm)
     {
         base.Init(_owner, _fsm);
@@ -21,5 +21,7 @@ public class YBot_BaseState : FSMBaseState<YBot_FSM>
 
         YBotAnimator = owner.GetComponent<Animator>();
         Debug.Assert(YBotAnimator != null, $"{owner.name} requires an Animator Component");
+
+        Ybot=owner.GetComponent<YBot_Controller>();
     }
 }

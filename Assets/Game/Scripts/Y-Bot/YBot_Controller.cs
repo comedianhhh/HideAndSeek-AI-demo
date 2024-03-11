@@ -9,6 +9,7 @@ public class YBot_Controller : MonoBehaviour
     [HideInInspector] public NavMeshPath path;
     public bool drawPath;
 
+    public GameObject CurrentSpot;
     void Start()
     {
         path = new NavMeshPath();

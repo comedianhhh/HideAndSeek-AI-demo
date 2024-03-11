@@ -23,11 +23,13 @@ public class YBot_JogState : YBot_BaseState
         animationListener = owner.GetComponent<AnimationListener>();
 
         hidingSpots = GameObject.FindGameObjectsWithTag("HidingSpot");
+        
     }
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         targetHidingSpot = ChooseHidingSpot();
+        Ybot.CurrentSpot = targetHidingSpot;
         if(targetHidingSpot!=null)
         {
             agent.SetDestination(targetHidingSpot.transform.position);

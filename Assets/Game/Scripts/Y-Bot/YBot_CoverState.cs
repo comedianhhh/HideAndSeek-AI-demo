@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using static YBot_CoverState;
 using static YBot_JumpWithStyleState;
 
@@ -17,6 +18,8 @@ public class YBot_CoverState : YBot_BaseState
     public bool HasBeenCaught=false;
 
     public float distanceToWall=0.2f;
+
+    public GameObject currentHidingSpot = null;
 
     private AnimationListener animationListener;
     private readonly int ANIM_StandToCover = Animator.StringToHash("StandToCover");
@@ -35,7 +38,7 @@ public class YBot_CoverState : YBot_BaseState
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-        AlignWithCover();
+        
 
         animationListener.AddAnimationCompletedListener(ANIM_StandToCover, OnAnimationCompleted);
         animationListener.AddAnimationCompletedListener(ANIM_CoverToStand, OnAnimationCompleted);
@@ -62,6 +65,7 @@ public class YBot_CoverState : YBot_BaseState
         //        break;
 
         //}
+        AlignWithCover();
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -73,7 +77,8 @@ public class YBot_CoverState : YBot_BaseState
         if (shortHashCode == ANIM_StandToCover)
         {
             coverStates = CoverStates.Cover;
-            
+
+
         }
         else if (shortHashCode == ANIM_CoverToStand)
         {
@@ -83,48 +88,10 @@ public class YBot_CoverState : YBot_BaseState
 
     private void AlignWithCover()
     {
-        RaycastHit hitInfo;
-        if (FindNearestCoverObject(out hitInfo))
-        {
-            // Position the player a certain distance from the wall
-            transform.position = hitInfo.point + hitInfo.normal * distanceToWall;
-
-            // Calculate forward direction for the player
-            Vector3 forwardDirection = hitInfo.normal;
-
-            // Set the player's rotation to face away from the wall
-            Quaternion targetRotation = Quaternion.LookRotation(forwardDirection);
-            transform.rotation= targetRotation;
-        }
+        Quaternion targetRotation = Quaternion.LookRotation(-Ybot.CurrentSpot.transform.forward);
+        transform.rotation= targetRotation;
     }
 
-    private bool FindNearestCoverObject(out RaycastHit hitInfo)
-    {
-        GameObject[] coverObjects = GameObject.FindGameObjectsWithTag("Cover");
-        bool hasHit = false;
-        float nearestDistance = Mathf.Infinity;
-        hitInfo = new RaycastHit();
-
-        foreach (GameObject cover in coverObjects)
-        {
-            Vector3 directionToCover = cover.transform.position - transform.position;
-            float angle = Vector3.Angle(transform.forward, directionToCover);
-            if (angle > 90) continue; // Cover is not in front of the player
-
-            if (Physics.Raycast(transform.position, directionToCover.normalized, out RaycastHit hit))
-            {
-                // Check if the first object hit is the cover object
-                if (hit.collider.gameObject == cover && hit.distance < nearestDistance)
-                {
-                    nearestDistance = hit.distance;
-                    hitInfo = hit;
-                    hasHit = true;
-                }
-            }
-        }
-
-        return hasHit;
-    }
 
     void OnFoundHandler()
     {

@@ -15,4 +15,6 @@ public class YBot_FSM : FSM
     public readonly int JogStateName = Animator.StringToHash("Jog");
     public readonly int CoverStateName = Animator.StringToHash("Cover");
     public readonly int CryStateName=Animator.StringToHash("Cry");
+
+    
 }
