@@ -16,7 +16,6 @@ public class YBot_JumpWithStyleState : YBot_BaseState
 
     public float JumpHeight = 1.25f;
     public float JumpTime = 1.0f;
-
     private float currentTime = 0.0f;
     private Vector3 startPosition = Vector3.zero;
     private Vector3 endPosition = Vector3.zero;

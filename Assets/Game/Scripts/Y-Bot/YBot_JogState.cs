@@ -40,7 +40,14 @@ public class YBot_JogState : YBot_BaseState
     private GameObject ChooseHidingSpot()
     {
         if (hidingSpots == null || hidingSpots.Length == 0) return null;
+        // Choose a random hiding spot
+
         int index = UnityEngine.Random.Range(0, hidingSpots.Length);
+        while(hidingSpots[index]==targetHidingSpot)
+        {
+            index = UnityEngine.Random.Range(0, hidingSpots.Length);
+        }
+        
         return hidingSpots[index];
     }
     private void OnAnimatorMove()
